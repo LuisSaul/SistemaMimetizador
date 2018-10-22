@@ -27,7 +27,8 @@ potenciometro.
 
 // Incluir la libreria:
 #include <LiquidCrystal.h>
-
+char input;
+String mensaje="";
 // Inicializar la libreria con el numero de los pines
 LiquidCrystal lcd(11, 10, 9, 6, 5, 3);
 
@@ -40,13 +41,49 @@ void setup() {
 
 void loop() {
   //Verificar si se tiene información pendiente por revisar
+ // lcd.setCursor(5, 0);
+  //lcd.print("ARDUINO!");
+  
+  //lcd.setCursor(3, 1);
+  //lcd.print("LCD 16X2");
+
   if(Serial.available()){
     delay(100);
     //Limpiar la pantalla LCD
-    lcd.clear();
+    //input = Serial.read();
+    //mensaje += input;
     while(Serial.available()>0){
-      //Mostrar en pantalla lo que encuentre en el monitor serial
-      lcd.write(Serial.read());
+      mensaje = Serial.readStringUntil('\n');
+      //Lectura de caracteres   
+      imprimirMensaje(mensaje);
+      //mensaje="";
+    }
+  }else{
+    //Serial.println(mensaje);
+      //imprimirMensaje(mensaje);
+    }
+}
+
+void imprimirMensaje(String msj){
+  int contLinea=0;
+  int bla=(msj.length()/16)+1;
+  String mensaje [bla];
+  for(int i=1;i<msj.length()+1;i++){
+    mensaje[contLinea]+=msj.charAt(i-1);
+    if(i%16==0){
+      contLinea++;
     }
   }
+  for(int i=1;i<bla;i++){
+    lcd.clear();
+    Serial.println(mensaje[i]);
+    lcd.setCursor(0, 0);
+    lcd.print(mensaje[i-1]);
+  
+    lcd.setCursor(0, 1);
+    lcd.print(mensaje[i]);
+    delay(2500);
+    
+  }
 }
+

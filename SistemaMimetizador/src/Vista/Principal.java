@@ -102,7 +102,7 @@ public class Principal extends JFrame{
         areaMensajes.setText("");
     }
     private void enviarInfoArduino(){
-//        try {
+//z        try {
 //            arduino.sendData(areaMensajes.getText());
 //        } catch (Exception ex) {
 //            
