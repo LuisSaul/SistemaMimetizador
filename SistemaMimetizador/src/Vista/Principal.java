@@ -8,10 +8,20 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import panamahitek.Arduino.PanamaHitek_Arduino;
+import com.panamahitek.PanamaHitek_Arduino;
+import com.panamahitek.ArduinoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import com.panamahitek.PanamaHitek_MultiMessage;
+import jssc.SerialPortEventListener;
+import jssc.SerialPortEvent;
+import jssc.SerialPortException;
 
 public class Principal extends JFrame{
     PanamaHitek_Arduino arduino;
+    PanamaHitek_MultiMessage multi;
+    SerialPortEventListener listener;
+    int numMessage = 0;
     Menssager m;
     private String [] messagesCombo; 
     public int size;
@@ -25,31 +35,57 @@ public class Principal extends JFrame{
         armar();
     }
     private void crear(){
+        messagesCombo = new String[9];
         arduino = new PanamaHitek_Arduino();
+        multi = new PanamaHitek_MultiMessage(1, arduino);
+        listener = new SerialPortEventListener() {
+            @Override
+            public void serialEvent(SerialPortEvent spe) {
+                try {
+                    if(multi.dataReceptionCompleted()){
+                        char letra = multi.getMessage(0).charAt(0);
+                        if(letra == 'H'){
+                            messagesCombo[0]=multi.getMessage(0);
+                            //System.out.println(multi.getMessage(0));
+                            System.out.println(messagesCombo[0]);
+                        }else{
+                            if( letra >= '0' && letra <= '9' ){                              
+                                numMessage = Integer.parseInt( multi.getMessage(0) );
+                            }
+                        }
+                        multi.flushBuffer();
+                    }
+                } catch (ArduinoException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SerialPortException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
         m = new Menssager();
         pnlPrincipal = new JPanel();
         pnlPrincipal.setLayout(null);
         ManejaBotones metodos = new ManejaBotones();
-        pnlPrincipal.setBounds(0, 0, 800, 500);
+        pnlPrincipal.setBounds(0, 0, 650, 500);
         areaMensajes = new JTextField();
-        areaMensajes.setBounds(50, 200, 660, 30);
+        areaMensajes.setBounds(50, 200, 550, 30);
         listaMensaje = new JComboBox();
-        listaMensaje.setBounds(50, 300, 660, 30);
+        listaMensaje.setBounds(50, 300, 550, 30);
         btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(metodos);
-        btnAgregar.setBounds(50, 400, 100, 30);
+        btnAgregar.setBounds(50, 400, 80, 30);
         btnEliminar = new JButton("Eliminar");
         btnEliminar.addActionListener(metodos);
-        btnEliminar.setBounds(170, 400, 100, 30);
+        btnEliminar.setBounds(150, 400, 80, 30);
         btnModificar = new JButton("Modificar");
         btnModificar.addActionListener(metodos);
-        btnModificar.setBounds(290, 400, 100, 30);
+        btnModificar.setBounds(250, 400, 80, 30);
         btnGuardar = new JButton("Guardar");
         btnGuardar.addActionListener(metodos);
-        btnGuardar.setBounds(410, 400, 100, 30);
+        btnGuardar.setBounds(350, 400, 80, 30);
         btnActSensores = new JButton("Actualizar sensores");
         btnActSensores.addActionListener(metodos);
-        btnActSensores.setBounds(530, 400, 180, 30);
+        btnActSensores.setBounds(450, 400, 160, 30);
     }
     private void armar(){
         pnlPrincipal.add(listaMensaje);
@@ -61,14 +97,14 @@ public class Principal extends JFrame{
         pnlPrincipal.add(btnActSensores);
         add(pnlPrincipal);
         try{
-            arduino.arduinoTX("COM7",9600);
-        }catch(Exception e){
-            System.err.println("Errorsillo");
-        }
+            arduino.arduinoRXTX("COM7",9600, listener);   
+        }catch (ArduinoException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
     public void lanzar(){
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       setSize(800,500);
+       setSize(650,500);
        setVisible(true);
     }
     //Clase manejadora de botónes
@@ -76,6 +112,7 @@ public class Principal extends JFrame{
         @Override
        public void actionPerformed(ActionEvent evento){
            if(evento.getSource()==btnAgregar){
+               enviarInfoArduino();
                 messagesCombo = m.save(areaMensajes.getText());
                 actulizarLista();
            }else if(evento.getSource()==btnEliminar){
@@ -102,11 +139,14 @@ public class Principal extends JFrame{
         areaMensajes.setText("");
     }
     private void enviarInfoArduino(){
-//z        try {
-//            arduino.sendData(areaMensajes.getText());
-//        } catch (Exception ex) {
-//            
-//        }
+        try {
+            arduino.sendData(messagesCombo[0]);
+        } catch (Exception ex) {
+            
+        }
+    }
+    private void crearPrimerMensaje(){
+        
     }
     
     public static void main(String[] args) {
