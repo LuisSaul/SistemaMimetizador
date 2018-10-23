@@ -26,9 +26,8 @@ public class Menssager {
     }
     
     public String [] delete(int index){
-        //boolean deleted = false;
-        
-        if( index < this.messages.length ){
+        //boolean deleted = false;        
+        if( index < this.size ){
             for(int i = index; this.messages[i+1] != null; i++ ) {
                 this.messages[i] = this.messages[i+1];
             }
@@ -41,10 +40,10 @@ public class Menssager {
     }
     
     public String [] edit(int index, String message){
-        boolean edited = false;
+        //boolean edited = false;
         if( index < this.size ){
             this.messages[ index ] = message;
-            edited = true;
+            //edited = true;
         }
         return messages;
     }
@@ -73,7 +72,7 @@ public class Menssager {
         m.save("Carlos Rafael Levy Rojas x6");
         
         m.edit(1, "Rojas Levy Carlos Rafael [Editado]");
-        m.delete(2);
+        m.delete(5);
         m.save("Carlos Rafael Levy Rojas [Nuevo]");
         m.print();
     }

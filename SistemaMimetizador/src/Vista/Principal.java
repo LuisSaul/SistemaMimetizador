@@ -18,14 +18,12 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortException;
 
 public class Principal extends JFrame {
-
     PanamaHitek_Arduino arduino;
     PanamaHitek_MultiMessage multi;
     SerialPortEventListener listener;
-    int numMessage = 0;
-    Menssager m;
-    private String[] messagesCombo;
-    public int size;
+    
+    Menssager messager;
+    
     JComboBox listaMensaje;
     JTextField areaMensajes;
     JButton btnAgregar, btnEliminar, btnModificar, btnGuardar, btnActSensores;
@@ -38,7 +36,6 @@ public class Principal extends JFrame {
     }
 
     private void crear() {
-        messagesCombo = new String[9];
         arduino = new PanamaHitek_Arduino();
         multi = new PanamaHitek_MultiMessage(1, arduino);
         listener = new SerialPortEventListener() {
@@ -47,13 +44,18 @@ public class Principal extends JFrame {
                 try {
                     if (multi.dataReceptionCompleted()) {
                         char letra = multi.getMessage(0).charAt(0);
+                        System.out.print(" Información recivida: ");
+                        System.out.println(multi.getMessage(0));
                         if ((letra == 'H') || (letra == 'E')) {
-                            messagesCombo[0] = multi.getMessage(0);
-                            //System.out.println(multi.getMessage(0));
-                            System.out.println(messagesCombo[0]);
+                            if (messager.size == 0) {
+                                messager.save(multi.getMessage(0));
+                            } else {
+                                messager.edit(0, multi.getMessage(0));
+                            }
+                            actulizarLista();
                         } else {
                             if (letra >= '0' && letra <= '9') {
-                                numMessage = Integer.parseInt(multi.getMessage(0));
+                                enviarInfoArduino( Integer.parseInt(multi.getMessage( 0 )));
                             }
                         }
                         multi.flushBuffer();
@@ -65,7 +67,7 @@ public class Principal extends JFrame {
                 }
             }
         };
-        m = new Menssager();
+        messager = new Menssager();
         pnlPrincipal = new JPanel();
         pnlPrincipal.setLayout(null);
         ManejaBotones metodos = new ManejaBotones();
@@ -101,7 +103,7 @@ public class Principal extends JFrame {
         pnlPrincipal.add(btnActSensores);
         add(pnlPrincipal);
         try {
-            arduino.arduinoRXTX("COM3", 9600, listener);
+            arduino.arduinoRXTX("/dev/ttyUSB0", 9600, listener);
         } catch (ArduinoException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -111,25 +113,28 @@ public class Principal extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(650, 500);
         setVisible(true);
+        this.setResizable(false);
     }
 
     //Clase manejadora de botónes
-
     public class ManejaBotones implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent evento) {
             if (evento.getSource() == btnAgregar) {
-                enviarInfoArduino();
-                messagesCombo = m.save(areaMensajes.getText());
+                String text = areaMensajes.getText();
+
+                if (text.length() > 0) {
+                    messager.save(areaMensajes.getText());
+                    //enviarInfoArduino();
+                }
                 actulizarLista();
             } else if (evento.getSource() == btnEliminar) {
-                messagesCombo = m.delete(listaMensaje.getSelectedIndex());
+                messager.delete(listaMensaje.getSelectedIndex());
                 actulizarLista();
             } else if (evento.getSource() == btnModificar) {
-                areaMensajes.setText((String) listaMensaje.getSelectedItem());
+                areaMensajes.setText(messager.get(listaMensaje.getSelectedIndex()));
             } else if (evento.getSource() == btnGuardar) {
-                messagesCombo = m.edit(listaMensaje.getSelectedIndex(), areaMensajes.getText());
+                messager.edit(listaMensaje.getSelectedIndex(), areaMensajes.getText());
                 actulizarLista();
             } else if (evento.getSource() == btnActSensores) {
                 try {
@@ -140,43 +145,30 @@ public class Principal extends JFrame {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
         }
     }
 
     //Metodo actualizarLista, actualiza el JComboBox
-
     private void actulizarLista() {
         listaMensaje.removeAllItems();
-        for (int i = 0; i < messagesCombo.length; i++) {
-            if (messagesCombo[i] != null) {
-                listaMensaje.addItem(messagesCombo[i]);
-            }
+        for (int i = 0; i < messager.size; i++) {
+            listaMensaje.addItem(i + ".- " + messager.get(i));
         }
         areaMensajes.setText("");
     }
 
-    private void enviarInfoArduino() {
+    private void enviarInfoArduino(int index) {
         try {
-            String parteMensaje = "";
-            for (int i = 1; i < messagesCombo[0].length() + 1; i++) {
-                parteMensaje += messagesCombo[0].charAt(i - 1);
-                if (i % 64 == 0) {
-                    arduino.sendData(parteMensaje);
-                    System.out.println(parteMensaje);
-                    parteMensaje = "";
-                } else if ((i == messagesCombo[0].length()) && (i % 64 != 0)) {
-                    arduino.sendData(parteMensaje);
-                    System.out.println(parteMensaje);
-                }
+            if (messager.size > index) {
+                arduino.sendData(messager.get(index));
+            } else {
+                arduino.sendData("Message no found ");
             }
-            //arduino.sendData(messagesCombo[0]);
         } catch (Exception ex) {
-
+            System.err.println("Error al tratar de enviar un mensaje");
+            ex.printStackTrace();
         }
-    } 
-
-    private void crearPrimerMensaje() {
-
     }
 
     public static void main(String[] args) {
