@@ -47,7 +47,7 @@ public class Principal extends JFrame {
                 try {
                     if (multi.dataReceptionCompleted()) {
                         char letra = multi.getMessage(0).charAt(0);
-                        if (letra == 'H') {
+                        if ((letra == 'H') || (letra == 'E')) {
                             messagesCombo[0] = multi.getMessage(0);
                             //System.out.println(multi.getMessage(0));
                             System.out.println(messagesCombo[0]);
@@ -132,7 +132,13 @@ public class Principal extends JFrame {
                 messagesCombo = m.edit(listaMensaje.getSelectedIndex(), areaMensajes.getText());
                 actulizarLista();
             } else if (evento.getSource() == btnActSensores) {
-
+                try {
+                    arduino.sendData("act_sensor");
+                } catch (ArduinoException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SerialPortException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
