@@ -17,24 +17,27 @@ import jssc.SerialPortEventListener;
 import jssc.SerialPortEvent;
 import jssc.SerialPortException;
 
-public class Principal extends JFrame{
+public class Principal extends JFrame {
+
     PanamaHitek_Arduino arduino;
     PanamaHitek_MultiMessage multi;
     SerialPortEventListener listener;
     int numMessage = 0;
     Menssager m;
-    private String [] messagesCombo; 
+    private String[] messagesCombo;
     public int size;
     JComboBox listaMensaje;
     JTextField areaMensajes;
     JButton btnAgregar, btnEliminar, btnModificar, btnGuardar, btnActSensores;
     JPanel pnlPrincipal;
-    Principal(){
+
+    Principal() {
         super("Sistema mimetizador");
         crear();
         armar();
     }
-    private void crear(){
+
+    private void crear() {
         messagesCombo = new String[9];
         arduino = new PanamaHitek_Arduino();
         multi = new PanamaHitek_MultiMessage(1, arduino);
@@ -42,15 +45,15 @@ public class Principal extends JFrame{
             @Override
             public void serialEvent(SerialPortEvent spe) {
                 try {
-                    if(multi.dataReceptionCompleted()){
+                    if (multi.dataReceptionCompleted()) {
                         char letra = multi.getMessage(0).charAt(0);
-                        if(letra == 'H'){
-                            messagesCombo[0]=multi.getMessage(0);
+                        if (letra == 'H') {
+                            messagesCombo[0] = multi.getMessage(0);
                             //System.out.println(multi.getMessage(0));
                             System.out.println(messagesCombo[0]);
-                        }else{
-                            if( letra >= '0' && letra <= '9' ){                              
-                                numMessage = Integer.parseInt( multi.getMessage(0) );
+                        } else {
+                            if (letra >= '0' && letra <= '9') {
+                                numMessage = Integer.parseInt(multi.getMessage(0));
                             }
                         }
                         multi.flushBuffer();
@@ -87,7 +90,8 @@ public class Principal extends JFrame{
         btnActSensores.addActionListener(metodos);
         btnActSensores.setBounds(450, 400, 160, 30);
     }
-    private void armar(){
+
+    private void armar() {
         pnlPrincipal.add(listaMensaje);
         pnlPrincipal.add(areaMensajes);
         pnlPrincipal.add(btnAgregar);
@@ -96,59 +100,79 @@ public class Principal extends JFrame{
         pnlPrincipal.add(btnGuardar);
         pnlPrincipal.add(btnActSensores);
         add(pnlPrincipal);
-        try{
-            arduino.arduinoRXTX("COM7",9600, listener);   
-        }catch (ArduinoException ex) {
+        try {
+            arduino.arduinoRXTX("COM3", 9600, listener);
+        } catch (ArduinoException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
-    public void lanzar(){
-       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       setSize(650,500);
-       setVisible(true);
+
+    public void lanzar() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(650, 500);
+        setVisible(true);
     }
+
     //Clase manejadora de botónes
-    public class ManejaBotones implements ActionListener{
+
+    public class ManejaBotones implements ActionListener {
+
         @Override
-       public void actionPerformed(ActionEvent evento){
-           if(evento.getSource()==btnAgregar){
-               enviarInfoArduino();
+        public void actionPerformed(ActionEvent evento) {
+            if (evento.getSource() == btnAgregar) {
+                enviarInfoArduino();
                 messagesCombo = m.save(areaMensajes.getText());
                 actulizarLista();
-           }else if(evento.getSource()==btnEliminar){
+            } else if (evento.getSource() == btnEliminar) {
                 messagesCombo = m.delete(listaMensaje.getSelectedIndex());
                 actulizarLista();
-           }else if(evento.getSource()==btnModificar){
+            } else if (evento.getSource() == btnModificar) {
                 areaMensajes.setText((String) listaMensaje.getSelectedItem());
-           }else if(evento.getSource()==btnGuardar){
-                messagesCombo = m.edit(listaMensaje.getSelectedIndex(),areaMensajes.getText());
+            } else if (evento.getSource() == btnGuardar) {
+                messagesCombo = m.edit(listaMensaje.getSelectedIndex(), areaMensajes.getText());
                 actulizarLista();
-           }else if(evento.getSource()==btnActSensores){
-                
-           }
-       }
+            } else if (evento.getSource() == btnActSensores) {
+
+            }
+        }
     }
+
     //Metodo actualizarLista, actualiza el JComboBox
-    private void actulizarLista(){
+
+    private void actulizarLista() {
         listaMensaje.removeAllItems();
         for (int i = 0; i < messagesCombo.length; i++) {
-            if(messagesCombo[i] != null){
+            if (messagesCombo[i] != null) {
                 listaMensaje.addItem(messagesCombo[i]);
             }
         }
         areaMensajes.setText("");
     }
-    private void enviarInfoArduino(){
+
+    private void enviarInfoArduino() {
         try {
-            arduino.sendData(messagesCombo[0]);
+            String parteMensaje = "";
+            for (int i = 1; i < messagesCombo[0].length() + 1; i++) {
+                parteMensaje += messagesCombo[0].charAt(i - 1);
+                if (i % 64 == 0) {
+                    arduino.sendData(parteMensaje);
+                    System.out.println(parteMensaje);
+                    parteMensaje = "";
+                } else if ((i == messagesCombo[0].length()) && (i % 64 != 0)) {
+                    arduino.sendData(parteMensaje);
+                    System.out.println(parteMensaje);
+                }
+            }
+            //arduino.sendData(messagesCombo[0]);
         } catch (Exception ex) {
-            
+
         }
+    } 
+
+    private void crearPrimerMensaje() {
+
     }
-    private void crearPrimerMensaje(){
-        
-    }
-    
+
     public static void main(String[] args) {
         Principal p = new Principal();
         p.lanzar();
