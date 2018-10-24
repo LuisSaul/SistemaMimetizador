@@ -3,9 +3,9 @@
 
 Autores
 -------
-Ornelas Pérez Luis Saul
-Paniagua Soto Rafael
-Vallejo Herrera Juda Alector
+* Ornelas Pérez Luis Saul
+* Paniagua Soto Rafael
+* Vallejo Herrera Juda Alector
 
 Descripción de la Práctica
 --------------------------
@@ -46,13 +46,18 @@ Material
 
 Resultados de la Práctica
 -------------------------
-Armado del circuito
+### Armado del circuito
+
 ![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Circuito1.jpeg)
 ![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Circuito2.jpeg)
-Prueba eliminación mensaje
+
+### Prueba eliminación mensaje
+
 ![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Eliminar1.jpg)
 ![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Eliminar2.jpg)
-Prueba actualización mensaje
+
+### Prueba actualización mensaje
+
 ![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/MensajeActualizado1.jpg)
 ![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/MensajeActualizado2.jpg)
 ![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/MensajeActualizado3.jpg)
