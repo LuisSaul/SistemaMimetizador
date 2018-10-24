@@ -62,19 +62,4 @@ public class Menssager {
         return result;
     }
     
-    public static void main(String [] args){
-        Menssager m = new Menssager();
-        m.save("Carlos Rafael Levy Rojas x1");
-        m.save("Carlos Rafael Levy Rojas x2");
-        m.save("Carlos Rafael Levy Rojas x3");
-        m.save("Carlos Rafael Levy Rojas x4");
-        m.save("Carlos Rafael Levy Rojas x5");
-        m.save("Carlos Rafael Levy Rojas x6");
-        
-        m.edit(1, "Rojas Levy Carlos Rafael [Editado]");
-        m.delete(5);
-        m.save("Carlos Rafael Levy Rojas [Nuevo]");
-        m.print();
-    }
-    
 }
