@@ -147,7 +147,8 @@ public class Principal extends JFrame {
         pnlPrincipal.add(lblIconoJavaArduino);
         add(pnlPrincipal);
         try {
-            arduino.arduinoRXTX("/dev/ttyUSB0", 9600, listener);
+            arduino.arduinoRXTX("COM7", 9600, listener);
+            //arduino.arduinoRXTX("/dev/ttyUSB0", 9600, listener);
         } catch (ArduinoException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }

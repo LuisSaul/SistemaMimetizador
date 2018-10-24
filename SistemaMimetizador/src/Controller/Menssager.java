@@ -1,11 +1,17 @@
 package Controller;
 
-/**
- *
- * @author Saul Ulises 
- */
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Menssager {
     private String [] messages; 
+    Date date;
+    //Variable para obtener la fecha
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    //Variable para obtener la hora
+    DateFormat hourFormat = new SimpleDateFormat("HH:mm");
+            
     public int size; 
     
     public Menssager (){
@@ -18,8 +24,12 @@ public class Menssager {
     
     public String [] save(String message){
         //boolean saved = false;
-        if( this.size < this.messages.length ) {
+        if( this.size == 0 ) {
             this.messages[ size++ ] = message;
+            //saved = true;
+        } else if( this.size < this.messages.length ) {
+            date = new Date();
+            this.messages[ size++ ] = dateFormat.format(date)+" "+hourFormat.format(date)+message;
             //saved = true;
         }
         return messages;
