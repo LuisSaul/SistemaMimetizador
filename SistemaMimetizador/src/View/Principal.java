@@ -43,7 +43,8 @@ public class Principal extends JFrame {
         lookAndFell();
         create();
         assemble();
-    }//Método lookAndFell, Sirve para darle un diseño más agradable a la aplicación
+    }/
+    /Método lookAndFell, Sirve para darle un diseño más agradable a la aplicación
     public void lookAndFell(){
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -51,30 +52,37 @@ public class Principal extends JFrame {
                 javax.swing.UnsupportedLookAndFeelException ex) {  
         }        
     }
+
     //Método create, dónde se inicializan todas las variables
     private void create() {
         arduino = new PanamaHitek_Arduino();
         multi = new PanamaHitek_MultiMessage(1, arduino);
         listener = new SerialPortEventListener() {
-            @Override
+            @Overridemen
             public void serialEvent(SerialPortEvent spe) {
                 try {
                     if (multi.dataReceptionCompleted()) {
                         char letra = multi.getMessage(0).charAt(0);
+                        //--------------------------------------------------------
+                        // Estos print sopara ver que enviá el arduino
                         System.out.print(" Información recibida: ");
                         System.out.println(multi.getMessage(0));
+                        //--------------------------------------------------------
+                        //Evaluamos sí exite erro o está enviando el estado de los sensores
                         if ((letra == 'H') || (letra == 'E')) {
+                            //Sí no exite algún mensaje lo pone en la posición 0.
                             if (messager.size == 0) {
                                 messager.save(multi.getMessage(0));
                             } else {
+                                //Sí exite algún mensaje sólo lo edita. 
                                 messager.edit(0, multi.getMessage(0));
                             }
                             updateList();
-                        } else {
-                            if (letra >= '0' && letra <= '9') {
-                                sendArduinoInfo( Integer.parseInt(multi.getMessage( 0 )));
-                            }
+                        } else (letra >= '0' && letra <= '9') {
+                            // Sí es una letra entre el 0 o el 9 enviamos el mensaje que está guardado.
+                            sendArduinoInfo( Integer.parseInt(multi.getMessage( 0 )));
                         }
+                        //Limpiamos el buffer para que el serial pueda enviar y recibir mensajes. 
                         multi.flushBuffer();
                     }
                 } catch (ArduinoException ex) {
@@ -84,6 +92,10 @@ public class Principal extends JFrame {
                 }
             }
         };
+
+        /**
+            Inicialización de objetos para la vista y controlar el funcionamiento
+        */
         messager = new Menssager();
         pnlPrincipal = new JPanel();
         pnlPrincipal.setLayout(null);
@@ -147,7 +159,8 @@ public class Principal extends JFrame {
         pnlPrincipal.add(lblIconoJavaArduino);
         add(pnlPrincipal);
         try {
-            arduino.arduinoRXTX("COM7", 9600, listener);
+            // Se define el puerto porel que se va a generar la comunicación.
+            arduino.arduinoRXTX("dev/ttyUSB0", 9600, listener);
             //arduino.arduinoRXTX("/dev/ttyUSB0", 9600, listener);
         } catch (ArduinoException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
