@@ -13,7 +13,8 @@ import java.io.BufferedWriter;
  * @since October 19, 2018
  * @description Clase encargada de eliminar, salvar o detiar mensajes.
  */
-public class Menssager {
+public class Menssager {   
+            
     // En esta variable se guardarán cada uno de los mensajes
     private String [] messages; 
     private Date date;
@@ -31,7 +32,6 @@ public class Menssager {
         }
         this.size = 0;
         this.readData( );
-        this.print();
     }
     
     /**
@@ -51,6 +51,7 @@ public class Menssager {
         }
         return saved;
     }
+
     /**
         Ese método elimina menajes y devuelve verdadero sí es que lo ha podido hacer. También 
         recorre la posición de cada uno de los menajes.
@@ -96,24 +97,15 @@ public class Menssager {
         return result;
     }
 	
-    public static void main( String [] args ) {
-        Menssager m = new Menssager();
-        m.edit(0,"juda locote");
-        m.edit(3, "juda está bien locote");
-        m.delete(4);
-        m.save( "Juda Alberto ");
-	m.saveData();
-    }
-    
+       
     private void readData() {
         try {
-            FileReader file =  new FileReader("./file.txt");
+            FileReader file =  new FileReader("file.txt");
             BufferedReader bufferedReader = new BufferedReader ( file );
             String line = null;
             
             while( (line = bufferedReader.readLine()) != null){
-                this.save( line );
-                System.out.println( line );
+                this.messages[ this.size++ ] = line;
             }
             bufferedReader.close();
         }catch ( Exception e ) {
@@ -121,16 +113,14 @@ public class Menssager {
         }
         
     }
-    private void saveData(){
-        try {
-            FileWriter file = new FileWriter("./file.txt");
-            BufferedWriter writer = new BufferedWriter( file );
-            
+    public void saveData(){
+        try {           
+            FileWriter file = new FileWriter("file.txt");
+            BufferedWriter writer = new BufferedWriter( file ); 
             for (int i = 0, e = this.size; i < e; i++) {
                 writer.write(this.messages[ i ]);
                 writer.newLine();
             }            
-
             writer.close();
         }
         catch(Exception e) {

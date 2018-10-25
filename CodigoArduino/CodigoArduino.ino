@@ -37,7 +37,15 @@
   Conexión de foto-resistencia:
  * Conectada con una resistencia de 1 KOhm
  * y también al pin analogico A0
+ * 
+ * 
+ * *** En Java se utiliza la librería Panama HiTek para 
+ *     conectar arudino con Java. 
+ *     
+ * *** En arduino al utilizar la sentencia println se envian
+ *     los datos impresos a la aplicación de Java. 
  */
+
 
 // Incluir la libreria:
 #include <LiquidCrystal.h>
@@ -52,16 +60,16 @@ LiquidCrystal lcd(11, 10, 9, 6, 5, 3);
 
 //--------Teclado matricial--------
 //Definimos el número de renglones del teclado matricial
-const byte rowsLength = 4;
+const byte ROWSLENGTH = 4;
 //Definimos el número de columnas del teclado matricial
-const byte colsLength = 4;
+const byte COLSLENGTH = 4;
 //Definimos los pines de los renglones que van conectados a arduino
-byte rowPin [rowsLength] = {12, 8, 7, 4};
+byte rowPin [ROWSLENGTH] = {12, 8, 7, 4};
 //Definimos los pines de las columnas que van conectados a arduino
-byte colPin [colsLength] = {A1,A2,A3,A4};
+byte colPin [COLSLENGTH] = {A1,A2,A3,A4};
 
 //Definimos la matriz de char con el nombre de los bótones del teclado
-char keys[rowsLength][colsLength] = {
+char keys[ROWSLENGTH][COLSLENGTH] = {
   {'1', '2', '3' , 'A'},
   {'4', '5', '6' , 'B'},
   {'7', '8', '9' , 'C'},
@@ -72,8 +80,8 @@ Keypad kb = Keypad(
   makeKeymap( keys ), 
   rowPin,
   colPin,
-  rowsLength,
-  colsLength
+  ROWSLENGTH,
+  COLSLENGTH
 );
 //Definimos una variable de tipo char para que muestre cual tecla fue presionada
 char keyPressed;
@@ -89,7 +97,7 @@ char keyPressed;
 // Declaramos constantes necesarias para calcular la luminosidad
 const long A = 1000; //Resistencia en oscuridad en KΩ
 const int B = 15; //Resistencia a la luz (10 Lux) en KΩ
-const int Rc = 10; //Resistencia calibracion en KΩ
+const int RC = 10; //Resistencia calibracion en KΩ
 
 //---------------Fotoresistencia--------------------
 // Declaramos variables necesarias para calcular la luminosidad
@@ -107,14 +115,21 @@ void setup() {
   Serial.begin(9600);
   // Comenzamos el sensor DHT
   dht.begin();
+  //Enviamos por defecto la actualización de los sensores.
   sendSensorData();
 }
 
 void loop() {
+  // Obtenemos el valor de el teclado
   keyPressed = kb.getKey();
+  //Comprobamos sí una tecla fue presionada.
   if( keyPressed != NO_KEY ){
+    // Enviamos la información de la tecla
+    // La información es la contenida en keys
     Serial.println( keyPressed );
+    //Sí el valor de esa tecla fue 'A'
     if( keyPressed == 'A'){
+      //Enviamos el valor de los sensores.
       sendSensorData();
     }
   }
@@ -210,7 +225,7 @@ void sendSensorData(){
     // Leemos el voltaje producido por la fotoresistencia
     V = analogRead(LDRPin);
     // Calculamos la luminosidad en base al cálculo anterior
-    iluminacion = ((long)V*A*10)/((long)B*Rc*(1024-V));
+    iluminacion = ((long)V*A*10)/((long)B*RC*(1024-V));
     // Creamos el mensaje que vamos a imprimir para la iluminación
     String mensajeI = "Iluminacion ";
     mensajeI += iluminacion;

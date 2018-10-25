@@ -43,8 +43,8 @@ public class Principal extends JFrame {
         lookAndFell();
         create();
         assemble();
-    }/
-    /Método lookAndFell, Sirve para darle un diseño más agradable a la aplicación
+    }
+    //Método lookAndFell, Sirve para darle un diseño más agradable a la aplicación
     public void lookAndFell(){
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -58,7 +58,7 @@ public class Principal extends JFrame {
         arduino = new PanamaHitek_Arduino();
         multi = new PanamaHitek_MultiMessage(1, arduino);
         listener = new SerialPortEventListener() {
-            @Overridemen
+            @Override
             public void serialEvent(SerialPortEvent spe) {
                 try {
                     if (multi.dataReceptionCompleted()) {
@@ -78,7 +78,7 @@ public class Principal extends JFrame {
                                 messager.edit(0, multi.getMessage(0));
                             }
                             updateList();
-                        } else (letra >= '0' && letra <= '9') {
+                        } else if (letra >= '0' && letra <= '9') {
                             // Sí es una letra entre el 0 o el 9 enviamos el mensaje que está guardado.
                             sendArduinoInfo( Integer.parseInt(multi.getMessage( 0 )));
                         }
@@ -101,16 +101,16 @@ public class Principal extends JFrame {
         pnlPrincipal.setLayout(null);
         ManageButtons metodos = new ManageButtons();
         lblSisMime = new JLabel("Sistema mimetizador");
-        lblSisMime.setFont(new Font("",1,25));
+        lblSisMime.setFont(new Font("",1,20));
         lblSisMime.setBounds(50,20,280,60);
         lblSaul = new JLabel("Ornelas Pérez Luis Saul");
-        lblSaul.setFont(new Font("",1,17));
+        lblSaul.setFont(new Font("",1,15));
         lblSaul.setBounds(70,90,200,50);
         lblRafa = new JLabel("Paniagua Soto Rafael");
-        lblRafa.setFont(new Font("",1,17));
+        lblRafa.setFont(new Font("",1,15));
         lblRafa.setBounds(70,120,200,50);
         lblJuda = new JLabel("Vallejo Herrera Juda Alector");
-        lblJuda.setFont(new Font("",1,17));
+        lblJuda.setFont(new Font("",1,15));
         lblJuda.setBounds(70,150,250,50);
         lblIconoJavaArduino = new JLabel(new ImageIcon("src/Images/AplicationIcon.png"));
         lblIconoJavaArduino.setBounds(400, 5, 230, 230);
@@ -133,13 +133,13 @@ public class Principal extends JFrame {
         btnDelete.setBounds(150, 430, 80, 30);
         btnUpdate = new JButton("Modificar");
         btnUpdate.addActionListener(metodos);
-        btnUpdate.setBounds(250, 430, 80, 30);
+        btnUpdate.setBounds(250, 430, 90, 30);
         btnSave = new JButton("Guardar");
         btnSave.addActionListener(metodos);
         btnSave.setBounds(350, 430, 80, 30);
         btnActSensores = new JButton("Actualizar sensores");
         btnActSensores.addActionListener(metodos);
-        btnActSensores.setBounds(450, 430, 140, 30);
+        btnActSensores.setBounds(450, 430, 160, 30);
     }
     //Método assemble, dónde se agregan todos los componentes a la vista
     private void assemble() {
@@ -160,8 +160,8 @@ public class Principal extends JFrame {
         add(pnlPrincipal);
         try {
             // Se define el puerto porel que se va a generar la comunicación.
-            arduino.arduinoRXTX("dev/ttyUSB0", 9600, listener);
-            //arduino.arduinoRXTX("/dev/ttyUSB0", 9600, listener);
+            //arduino.arduinoRXTX("dev/ttyUSB0", 9600, listener);
+            arduino.arduinoRXTX("/dev/ttyUSB0", 9600, listener);
         } catch (ArduinoException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -203,7 +203,7 @@ public class Principal extends JFrame {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
+            messager.saveData();
         }
     }
 
