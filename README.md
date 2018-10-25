@@ -43,9 +43,26 @@ Material
 * IDE Netbeans
 * Lenguaje de programación Java
 
+Especificaciones técnicas del equipo
+------------------------------------
+* Sistema Operativo: Ubuntu 16.04
+* Procesador: AMD Radeon R2
+* Memoria RAM: 8 GB
 
 Resultados de la Práctica
 -------------------------
+### Diagrama General del Sistema
+
+![Imagen](DiagramaFuncionamiento.JPG)
+
+### Diseño de Interfaz de Software
+
+![Imagen](DisenoInterfazSoftware.JPG)
+
+### Diagrama de Componentes
+
+![Imagen](DiagramaComponentes.JPG)
+
 ### Armado del circuito
 
 ![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Circuito1.jpeg)
