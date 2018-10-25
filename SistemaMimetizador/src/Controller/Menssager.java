@@ -9,7 +9,7 @@ public class Menssager {
     public int size; 
     
     public Menssager (){
-        this.messages = new String [9];
+        this.messages = new String [10];
         for(int i = 0, e = this.messages.length; i < e; i++){
             this.messages[ i ] = null;
         }
@@ -28,14 +28,13 @@ public class Menssager {
     public String [] delete(int index){
         //boolean deleted = false;        
         if( index < this.size ){
-            for(int i = index; this.messages[i+1] != null; i++ ) {
-                this.messages[i] = this.messages[i+1];
-            }
-            this.messages[ size-1 ] = null;
+            for(int i = index; i < this.size; i++ ) {
+                if( i == 9 ) this.messages[9] = null;
+                else this.messages[i] = this.messages[i+1];
+            }            
             this.size--;
             //deleted = true;
         }
-        
         return messages;
     }
     
@@ -70,10 +69,13 @@ public class Menssager {
         m.save("Carlos Rafael Levy Rojas x4");
         m.save("Carlos Rafael Levy Rojas x5");
         m.save("Carlos Rafael Levy Rojas x6");
+        m.save("Carlos Rafael Levy Rojas x7");
+        m.save("Carlos Rafael Levy Rojas x8");
+        m.save("Carlos Rafael Levy Rojas x9");
+        m.save("Carlos Rafael Levy Rojas x10");
         
-        m.edit(1, "Rojas Levy Carlos Rafael [Editado]");
-        m.delete(5);
-        m.save("Carlos Rafael Levy Rojas [Nuevo]");
+        m.delete(0);
+        m.delete(7);
         m.print();
     }
     

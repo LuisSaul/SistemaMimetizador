@@ -71,26 +71,26 @@ public class Principal extends JFrame {
         pnlPrincipal = new JPanel();
         pnlPrincipal.setLayout(null);
         ManejaBotones metodos = new ManejaBotones();
-        pnlPrincipal.setBounds(0, 0, 650, 500);
+        pnlPrincipal.setBounds(0, 0, 680, 500);
         areaMensajes = new JTextField();
         areaMensajes.setBounds(50, 200, 550, 30);
         listaMensaje = new JComboBox();
         listaMensaje.setBounds(50, 300, 550, 30);
         btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(metodos);
-        btnAgregar.setBounds(50, 400, 80, 30);
+        btnAgregar.setBounds(30, 400, 100, 30);
         btnEliminar = new JButton("Eliminar");
         btnEliminar.addActionListener(metodos);
-        btnEliminar.setBounds(150, 400, 80, 30);
+        btnEliminar.setBounds(150, 400, 100, 30);
         btnModificar = new JButton("Modificar");
         btnModificar.addActionListener(metodos);
-        btnModificar.setBounds(250, 400, 80, 30);
+        btnModificar.setBounds(270, 400, 100, 30);
         btnGuardar = new JButton("Guardar");
         btnGuardar.addActionListener(metodos);
-        btnGuardar.setBounds(350, 400, 80, 30);
+        btnGuardar.setBounds(390, 400, 100, 30);
         btnActSensores = new JButton("Actualizar sensores");
         btnActSensores.addActionListener(metodos);
-        btnActSensores.setBounds(450, 400, 160, 30);
+        btnActSensores.setBounds(500, 400, 190, 30);
     }
 
     private void armar() {
@@ -122,14 +122,12 @@ public class Principal extends JFrame {
         public void actionPerformed(ActionEvent evento) {
             if (evento.getSource() == btnAgregar) {
                 String text = areaMensajes.getText();
-
                 if (text.length() > 0) {
                     messager.save(areaMensajes.getText());
-                    //enviarInfoArduino();
                 }
                 actulizarLista();
             } else if (evento.getSource() == btnEliminar) {
-                messager.delete(listaMensaje.getSelectedIndex());
+                messager.delete( listaMensaje.getSelectedIndex() );
                 actulizarLista();
             } else if (evento.getSource() == btnModificar) {
                 areaMensajes.setText(messager.get(listaMensaje.getSelectedIndex()));

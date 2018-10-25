@@ -38,6 +38,7 @@ const byte colsLength = 4;
 byte rowPin [rowsLength] = {12, 8, 7, 4};
 byte colPin [colsLength] = {A1,A2,A3,A4};
 
+
 char keys[rowsLength][colsLength] = {
   {'1', '2', '3' , 'A'},
   {'4', '5', '6' , 'B'},
@@ -98,11 +99,8 @@ void loop() {
   }
    
   //Verificar si se tiene información pendiente por revisar
-
   if(Serial.available()){
     delay(100);
-    //Limpiar la pantalla LCD
-    
     while(Serial.available() > 0){
       //Lectura de caracteres   
       mensaje = Serial.readStringUntil('\n');
@@ -116,9 +114,6 @@ void loop() {
         imprimirMensaje(mensaje);  
       }
     }
-  }else{
-    //Serial.println(mensaje);
-      //imprimirMensaje(mensaje);
   }
 }
 
@@ -132,18 +127,24 @@ void imprimirMensaje(String msj){
       contLinea++;
     }
   }
-  for(int i=1;i<bla;i++){
+  if( bla == 1 ) {
     lcd.clear();
-    //Serial.println(mensaje[i]);
     lcd.setCursor(0, 0);
-    lcd.print(mensaje[i-1]);
-  
-    lcd.setCursor(0, 1);
-    lcd.print(mensaje[i]);
-    delay(2500);    
+    lcd.print(mensaje[0]);
+    delay(1000);    
+  } else {
+    for(int i=1;i<bla;i++){
+      lcd.clear();
+      //Serial.println(mensaje[i]);
+      lcd.setCursor(0, 0);
+      lcd.print(mensaje[i-1]);
+    
+      lcd.setCursor(0, 1);
+      lcd.print(mensaje[i]);
+      delay(1000);    
+    }  
   }
 }
-
 
 void sendSensorData(){    
     // ----------HUMEDAD Y TEMPERATURA----------
