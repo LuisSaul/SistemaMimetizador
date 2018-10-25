@@ -1,11 +1,17 @@
 package Controller;
 
-/**
- *
- * @author Saul Ulises 
- */
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Menssager {
     private String [] messages; 
+    Date date;
+    //Variable para obtener la fecha
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    //Variable para obtener la hora
+    DateFormat hourFormat = new SimpleDateFormat("HH:mm");
+            
     public int size; 
     
     public Menssager (){
@@ -18,8 +24,12 @@ public class Menssager {
     
     public String [] save(String message){
         //boolean saved = false;
-        if( this.size < this.messages.length ) {
+        if( this.size == 0 ) {
             this.messages[ size++ ] = message;
+            //saved = true;
+        } else if( this.size < this.messages.length ) {
+            date = new Date();
+            this.messages[ size++ ] = dateFormat.format(date)+" "+hourFormat.format(date)+message;
             //saved = true;
         }
         return messages;
@@ -59,24 +69,6 @@ public class Menssager {
             result = this.messages[ index ];
         }
         return result;
-    }
-    
-    public static void main(String [] args){
-        Menssager m = new Menssager();
-        m.save("Carlos Rafael Levy Rojas x1");
-        m.save("Carlos Rafael Levy Rojas x2");
-        m.save("Carlos Rafael Levy Rojas x3");
-        m.save("Carlos Rafael Levy Rojas x4");
-        m.save("Carlos Rafael Levy Rojas x5");
-        m.save("Carlos Rafael Levy Rojas x6");
-        m.save("Carlos Rafael Levy Rojas x7");
-        m.save("Carlos Rafael Levy Rojas x8");
-        m.save("Carlos Rafael Levy Rojas x9");
-        m.save("Carlos Rafael Levy Rojas x10");
-        
-        m.delete(0);
-        m.delete(7);
-        m.print();
     }
     
 }
