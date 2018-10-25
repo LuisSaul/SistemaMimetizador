@@ -65,16 +65,16 @@ Resultados de la Práctica
 
 ### Armado del circuito
 
-![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Circuito1.jpeg)
-![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Circuito2.jpeg)
+![Imagen](Circuito1.jpeg)
+![Imagen](Circuito2.jpeg)
 
 ### Prueba eliminación mensaje
 
-![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Eliminar1.jpg)
-![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/Eliminar2.jpg)
+![Imagen](Eliminar1)
+![Imagen](Eliminar2)
 
 ### Prueba actualización mensaje
 
-![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/MensajeActualizado1.jpg)
-![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/MensajeActualizado2.jpg)
-![Imagen](https://github.com/LuisSaul/SistemaMimetizador/blob/master/MensajeActualizado3.jpg)
+![Imagen](MensajeActualizado1)
+![Imagen](MensajeActualizado2)
+![Imagen](MensajeActualizado3)
